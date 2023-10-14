@@ -198,8 +198,6 @@ export function serializeStubbedReview({
     Object.values(vocabById)
   );
 
-  console.log(primaryMeaning, secondaryMeanings);
-
   return {
     id: +id,
     primaryMeaning,
