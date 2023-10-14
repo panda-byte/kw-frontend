@@ -122,7 +122,7 @@ function AboutPage() {
             <H2>Girl, Little Girl, Young Lady, Arggh!</H2>
             <P constrain>
               Many WK words have very similar meanings. To alleviate this, if you add{' '}
-              <strong>meaning synoynms on WK</strong> they will appear as part of the KW meaning /
+              <strong>meaning synonyms on WK</strong> they will appear as part of the KW meaning /
               quiz question. You can also add <strong>answer synonyms on KW</strong> as acceptable
               answers during your reviews or on the vocabulary entry page. The review screen also
               contains a mora count in the bottom left corner of the question. For example, the
