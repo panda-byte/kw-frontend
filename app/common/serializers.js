@@ -38,7 +38,8 @@ export const serializeVocabSearchResponse = ({ results }, persistedReviews = {})
 export function serializeSearchReviewData({ id, vocabulary } = {}) {
   const vocabById = serializeVocabs(vocabulary.readings);
   const { primaryMeaning, secondaryMeanings } = serializeMeanings(
-    vocabulary.meaning,
+    vocabulary.primary_meaning,
+    vocabulary.secondary_meanings,
     [],
     Object.values(vocabById)
   );
@@ -94,19 +95,19 @@ export function serializeLevel({ level, unlocked, vocabulary_count } = {}) {
   };
 }
 
-export function serializeMeanings(meaning, meaningSynonyms /* , vocab */) {
-  const meaningStrings = meaning.split(', ');
+export function serializeMeanings(
+  primaryMeaning,
+  secondaryMeanings,
+  meaningSynonyms /* , vocab */
+) {
   const synonymStrings = uniq(meaningSynonyms.map(({ text }) => text.replace(/"/g, '')));
   // FIXME: disabled until this can be improved, currently only a partial success
   //  const readings = flatMap(vocab, (v) => [v.primaryReading, ...v.secondaryReadings]);
   //  const filteredMeanings = filterRomajiReadings(meaningStrings.concat(synonymStrings), readings);
-  const [primaryMeaning, ...secondaryMeanings] = toUniqueStringsArray(
-    meaningStrings.concat(synonymStrings)
-  );
 
   return {
     primaryMeaning,
-    secondaryMeanings,
+    secondaryMeanings: toUniqueStringsArray(secondaryMeanings.concat(synonymStrings)),
   };
 }
 
@@ -191,10 +192,13 @@ export function serializeStubbedReview({
   const vocabById = serializeVocabs(vocabulary.readings);
   const synonymsById = serializeSynonyms(reading_synonyms);
   const { primaryMeaning, secondaryMeanings } = serializeMeanings(
-    vocabulary.meaning,
+    vocabulary.primary_meaning,
+    vocabulary.secondary_meanings,
     meaning_synonyms,
     Object.values(vocabById)
   );
+
+  console.log(primaryMeaning, secondaryMeanings);
 
   return {
     id: +id,
