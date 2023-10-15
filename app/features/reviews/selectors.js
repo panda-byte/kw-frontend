@@ -57,4 +57,9 @@ export const selectSecondaryMeanings = createSelector(
   getState('secondaryMeanings', [])
 );
 
+export const selectReviewByOriginalVocabId = createSelector(
+  [selectReviews, (state, originalVocabId) => originalVocabId],
+  (reviews, originalVocabId) => Object.values(reviews).find((review) => review.originalVocabId === originalVocabId)
+);
+
 export default selectReviewsDomain;

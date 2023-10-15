@@ -19,6 +19,7 @@ import {
   selectCurrent,
   selectCurrentId,
   selectCurrentPreviouslyIncorrect,
+  selectQueuedReviewByVocabId,
 } from 'features/quiz/QuizSession/selectors';
 
 import { app } from 'common/actions';
@@ -109,6 +110,20 @@ export const checkAnswerLogic = createLogic({
       isCorrect: false,
       isIncorrect: false,
     };
+
+    reviewItem.automaticSynonyms.every((automaticSynonym) => {
+      const match = matchAnswer(value, [undefined, automaticSynonym.readings, undefined]);
+
+      if (match) {
+        const matchedSynonymFromQueue = selectQueuedReviewByVocabId(
+          getState(),
+          match.originalVocabId
+        );
+        alert('You matched a synonym!', match, !!matchedSynonymFromQueue);
+        return true;
+      }
+      return false;
+    });
 
     if (matchedAnswer) {
       dispatch(

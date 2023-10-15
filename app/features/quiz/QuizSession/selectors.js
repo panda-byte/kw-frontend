@@ -4,7 +4,7 @@ import calculatePercentage from 'common/utils/calculatePercentage';
 
 import { getState } from 'common/selectors';
 import { selectLessonsCount, selectReviewsCount } from 'features/user/selectors';
-import { selectPrimaryVocabId } from 'features/reviews/selectors';
+import { selectPrimaryVocabId, selectReviewByOriginalVocabId } from 'features/reviews/selectors';
 import { selectVocabById } from 'features/vocab/selectors';
 import { SESSION_CATEGORIES, MINIMUM_QUEUE_COUNT } from './constants';
 
@@ -13,11 +13,11 @@ export const selectQuizDomain = getState(UI_DOMAIN);
 export const selectCategory = getState([UI_DOMAIN, 'category'], '');
 export const selectIsLessonQuiz = createSelector(
   selectCategory,
-  (category) => category === SESSION_CATEGORIES.LESSONS,
+  (category) => category === SESSION_CATEGORIES.LESSONS
 );
 export const selectIsReviewQuiz = createSelector(
   selectCategory,
-  (category) => category === SESSION_CATEGORIES.REVIEWS,
+  (category) => category === SESSION_CATEGORIES.REVIEWS
 );
 
 export const selectQueue = createSelector(selectQuizDomain, getState('queue', []));
@@ -32,14 +32,14 @@ export const selectIncorrectCount = createSelector(selectIncorrectIds, getState(
 export const selectCompleteCount = createSelector(selectCompleteIds, getState('length', 0));
 export const selectSynonymModalOpen = createSelector(
   selectQuizDomain,
-  getState('synonymModalOpen'),
+  getState('synonymModalOpen')
 );
 export const selectCurrentId = createSelector(selectCurrent, getState('id'));
 export const selectCurrentStreak = createSelector(selectCurrent, getState('streak'));
 
 export const selectPrimaryVocabFromCurrent = createSelector(
   [selectCurrentId, (state) => state],
-  (id, state) => selectVocabById(state, { id: selectPrimaryVocabId(state, { id }) }),
+  (id, state) => selectVocabById(state, { id: selectPrimaryVocabId(state, { id }) })
 );
 
 export const selectSessionCount = createSelector(
@@ -48,22 +48,22 @@ export const selectSessionCount = createSelector(
     if (isLessonQuiz) return lessons;
     if (isReviewsQuiz) return reviews;
     return 0;
-  },
+  }
 );
 
 export const selectSessionRemainingCount = createSelector(
   [selectSessionCount, selectCompleteCount],
-  (sessionCount, completeCount) => sessionCount - completeCount,
+  (sessionCount, completeCount) => sessionCount - completeCount
 );
 
 export const selectCurrentPreviouslyIncorrect = createSelector(
   [selectCurrentId, selectIncorrectIds],
-  (currentId, incorrectIds) => incorrectIds.includes(currentId),
+  (currentId, incorrectIds) => incorrectIds.includes(currentId)
 );
 
 export const selectPercentComplete = createSelector(
   [selectCompleteCount, selectSessionRemainingCount],
-  (complete, remaining) => calculatePercentage(complete, complete + remaining),
+  (complete, remaining) => calculatePercentage(complete, complete + remaining)
 );
 
 export const selectPercentCorrect = createSelector(
@@ -72,7 +72,7 @@ export const selectPercentCorrect = createSelector(
     const total = correct + incorrect;
     const pristine = total < 1;
     return pristine ? 100 : calculatePercentage(correct, total);
-  },
+  }
 );
 
 export const selectQueueNeeded = createSelector(
@@ -83,7 +83,7 @@ export const selectQueueNeeded = createSelector(
     const moreQueueExists = remaining - queueCount >= 1;
     const queueNeeded = (needMoreWrapUp || needMoreMinimum) && moreQueueExists;
     return queueNeeded;
-  },
+  }
 );
 
 export const selectIsFinalQuestion = createSelector(
@@ -92,7 +92,12 @@ export const selectIsFinalQuestion = createSelector(
     const isLastInQueue = queue.length > 0 && currentId === queue[0];
     const shouldWrapUp = wrapUp.active && wrapUp.count === 1;
     return shouldWrapUp || (remainingCount === 1 && isLastInQueue);
-  },
+  }
+);
+
+export const selectQueuedReviewByVocabId = createSelector(
+  [selectQueue, selectReviewByOriginalVocabId],
+  (queue, review) => review && queue.includes(review.id) ? review : null
 );
 
 export default selectQuizDomain;
