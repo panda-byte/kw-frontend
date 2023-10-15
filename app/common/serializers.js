@@ -174,6 +174,24 @@ export function serializeSynonyms(synonyms = []) {
   return createDict(synonyms.map(serializeSynonym), 'id');
 }
 
+/**
+ * Serializes automatic synonyms nested in a vocabularym
+ * containing `id`, `character`, and `kana`. The structure
+ * is transformed to work with the `matchAnswer` logic
+ * more easily. It resembles the shape of "manual synonyms",
+ * minus the `reviewId`.
+ */
+export function serializeAutomaticSynonyms(synonyms = []) {
+  return synonyms.map((synonym) => ({
+    id: synonym.id,
+    readings: synonym.readings.map((reading) => ({
+      id: reading.id,
+      word: reading.character,
+      primaryReading: reading.kana,
+    })),
+  }));
+}
+
 export function serializeStubbedReview({
   id,
   correct,
@@ -198,10 +216,13 @@ export function serializeStubbedReview({
     Object.values(vocabById)
   );
 
+  const automaticSynonyms = serializeAutomaticSynonyms(vocabulary.synonyms);
+
   return {
     id: +id,
     primaryMeaning,
     secondaryMeanings,
+    originalVocabId: vocabulary.id,
     vocab: Object.keys(vocabById).map(Number),
     synonyms: Object.keys(synonymsById).map(Number),
     correct: +correct,
@@ -212,6 +233,7 @@ export function serializeStubbedReview({
     vocabById,
     synonymsById,
     defaultReadingSynonyms,
+    automaticSynonyms,
   };
 }
 
