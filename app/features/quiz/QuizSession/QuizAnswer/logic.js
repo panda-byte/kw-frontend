@@ -111,19 +111,18 @@ export const checkAnswerLogic = createLogic({
       isIncorrect: false,
     };
 
-    reviewItem.automaticSynonyms.every((automaticSynonym) => {
-      const match = matchAnswer(value, [undefined, automaticSynonym.readings, undefined]);
+    const matchedSynonym = reviewItem.automaticSynonyms.find((automaticSynonym) =>
+      matchAnswer(value, [undefined, automaticSynonym.readings, undefined])
+    );
 
-      if (match) {
-        const matchedSynonymFromQueue = selectQueuedReviewByVocabId(
-          getState(),
-          match.originalVocabId
-        );
-        alert('You matched a synonym!', match, !!matchedSynonymFromQueue);
-        return true;
-      }
-      return false;
-    });
+    if (matchedSynonym) {
+      const matchedReview = selectQueuedReviewByVocabId(getState(), matchedSynonym.originalVocabId);
+
+      console.log(matchedSynonym);
+      console.log(matchedReview);
+
+      alert(`You matched a synonym!`);
+    }
 
     if (matchedAnswer) {
       dispatch(
