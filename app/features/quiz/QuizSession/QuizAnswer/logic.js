@@ -111,17 +111,38 @@ export const checkAnswerLogic = createLogic({
       isIncorrect: false,
     };
 
+    console.log('reviewItem', reviewItem);
+    console.log('vocab', vocab);
+    console.log('matched answer', matchedAnswer);
+
     const matchedSynonym = reviewItem.automaticSynonyms.find((automaticSynonym) =>
       matchAnswer(value, [undefined, automaticSynonym.readings, undefined])
     );
 
     if (matchedSynonym) {
-      const matchedReview = selectQueuedReviewByVocabId(getState(), matchedSynonym.originalVocabId);
+      const matchedReview = selectQueuedReviewByVocabId(getState(), matchedSynonym.id);
 
-      console.log(matchedSynonym);
-      console.log(matchedReview);
+      console.log('matchedSynonym', matchedSynonym);
+      console.log('matchedReview', matchedReview);
 
-      alert(`You matched a synonym!`);
+      console.log(currentId);
+
+      dispatch(quiz.answer.ignore());
+
+      if (matchedReview) {
+        dispatch(
+          quiz.info.update({
+            id: matchedReview.id,
+            isDisabled: false,
+            detailLevel: settings.infoDetailLevelOnSuccess,
+            isOpen: true,
+          })
+        );
+      } else {
+        dispatch(quiz.answer.ignore());
+      }
+
+      return;
     }
 
     if (matchedAnswer) {

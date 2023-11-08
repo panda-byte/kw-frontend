@@ -5,6 +5,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import quiz from 'features/quiz/actions';
 
 const initialState = {
+  id: null,
   isDisabled: true,
   isOpen: false,
   detailLevel: 0,

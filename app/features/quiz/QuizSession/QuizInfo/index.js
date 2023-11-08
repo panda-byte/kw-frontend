@@ -25,21 +25,27 @@ import ReadingLinks from 'common/components/ReadingLinks';
 import PitchDiagramList from 'common/components/PitchDiagram';
 import VocabLockButton from 'common/components/VocabLockButton';
 import Notes from 'features/reviews/Notes';
-import { selectInfoDetailLevel, selectInfoDisabled, selectInfoOpen } from './selectors';
+import {
+  selectInfoDetailLevel,
+  selectInfoDisabled,
+  selectInfoId,
+  selectInfoOpen,
+} from './selectors';
 
 import { Wrapper, ReadingWrapper } from './styles';
 
 const Readings = connect((state, { id }) => ({ ids: selectReviewVocabIds(state, { id }) }))(
-  ({ ids, isMidDetail, isHighDetail }) => ids.map((vocabId) => (
-    <ReadingWrapper key={cuid()} data-answer>
-      {<VocabWord id={vocabId} showFuri={isMidDetail} showSecondary={isMidDetail} />}
-      {isHighDetail && <PitchDiagramList id={vocabId} />}
-      {isMidDetail && <TagsList id={vocabId} />}
-      {isHighDetail && <ReadingLinks id={vocabId} />}
-      {isHighDetail && <SentencePair id={vocabId} />}
-      {isHighDetail && <StrokeLoader id={vocabId} />}
-    </ReadingWrapper>
-  ))
+  ({ ids, isMidDetail, isHighDetail }) =>
+    ids.map((vocabId) => (
+      <ReadingWrapper key={cuid()} data-answer>
+        {<VocabWord id={vocabId} showFuri={isMidDetail} showSecondary={isMidDetail} />}
+        {isHighDetail && <PitchDiagramList id={vocabId} />}
+        {isMidDetail && <TagsList id={vocabId} />}
+        {isHighDetail && <ReadingLinks id={vocabId} />}
+        {isHighDetail && <SentencePair id={vocabId} />}
+        {isHighDetail && <StrokeLoader id={vocabId} />}
+      </ReadingWrapper>
+    ))
 );
 
 class QuizInfo extends React.Component {
@@ -97,7 +103,11 @@ class QuizInfo extends React.Component {
 }
 
 const mapStateToProps = (state, props) => {
-  const id = selectCurrentId(state, props);
+  let id = selectInfoId(state, props);
+
+  if (id === null) {
+    id = selectCurrentId(state, props);
+  }
 
   return {
     id,
@@ -115,10 +125,7 @@ const mapDispatchToProps = {
 };
 
 const enhance = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   branch(({ id }) => !id, renderNothing),
   withContentRect('bounds')
 );
