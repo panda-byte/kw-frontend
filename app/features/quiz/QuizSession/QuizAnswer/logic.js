@@ -138,6 +138,8 @@ export const checkAnswerLogic = createLogic({
             isOpen: true,
           })
         );
+
+        dispatch(quiz.answer.update({ matchedSynonym: true, isMarked: true, isValid: true }));
       } else {
         dispatch(quiz.answer.ignore());
       }

@@ -93,8 +93,8 @@ export class QuizQuestion extends React.Component {
           {/* ensures TagsList is properly centered */}
           {moraCount > 0 && <MoraCountSpacer>{moraCount}音</MoraCountSpacer>}
         </Footer>
-        {!isLessonQuiz && isDisabled && (
-          <Flyover isIgnored={isIgnored} from={initialStreak} to={streak} />
+        {!isLessonQuiz && (isDisabled || matchedSynonym) && (
+          <Flyover isIgnored={isIgnored} matchedSynonym={matchedSynonym} from={initialStreak} to={streak} />
         )}
       </Wrapper>
     );

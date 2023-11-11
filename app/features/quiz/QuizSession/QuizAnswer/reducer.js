@@ -14,6 +14,7 @@ const initialState = {
   isIncorrect: false,
   isDisabled: false,
   isIgnored: false,
+  matchedSynonym: false,
 };
 
 export const quizAnswerReducer = handleActions(

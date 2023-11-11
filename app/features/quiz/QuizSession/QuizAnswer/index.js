@@ -24,6 +24,7 @@ export class QuizAnswer extends React.Component {
     isCorrect: PropTypes.bool,
     isIncorrect: PropTypes.bool,
     isIgnored: PropTypes.bool,
+    matchedSynonym: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -35,6 +36,7 @@ export class QuizAnswer extends React.Component {
     isCorrect: false,
     isIncorrect: false,
     isIgnored: false,
+    matchedSynonym: false,
   };
 
   componentDidMount() {
