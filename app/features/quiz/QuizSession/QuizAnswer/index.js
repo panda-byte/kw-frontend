@@ -94,6 +94,7 @@ export class QuizAnswer extends React.Component {
       isIgnored,
       isMarked,
       isValid,
+      matchedSynonym,
       streak,
     } = this.props;
     return (
@@ -107,6 +108,7 @@ export class QuizAnswer extends React.Component {
         correct={isCorrect}
         incorrect={isIncorrect}
         ignored={isIgnored}
+        matchedSynonym={matchedSynonym}
         tabIndex={0}
       >
         <AnswerWrapper>

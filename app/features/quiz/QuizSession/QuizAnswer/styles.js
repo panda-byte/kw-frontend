@@ -8,7 +8,7 @@ import { shadowBox, innerMedium } from 'common/styles/shadows';
 import { kilo } from 'common/styles/typography';
 import { gutter } from 'common/styles/layout';
 import { fastEaseQuad } from 'common/styles/animation';
-import { transparent, white, grey, yellow, red, green, orange } from 'common/styles/colors';
+import { transparent, white, grey, yellow, red, green, orange, cyan } from 'common/styles/colors';
 import { backgroundImageColor } from 'features/quiz/QuizSession/styles';
 
 /* eslint-disable indent */
@@ -145,7 +145,11 @@ function bgColorMixin({
   correct,
   incorrect,
   ignored,
+  matchedSynonym,
 }) {
+    if (matchedSynonym) {
+      return `background-color: ${cyan[10]};`;
+    }
     if (marked && !valid) {
       return `background-color: ${yellow[7]};`;
     }
