@@ -72,6 +72,7 @@ export class QuizQuestion extends React.Component {
       isLessonQuiz,
       isDisabled,
       isIgnored,
+      matchedSynonym,
       streak,
     } = this.props;
     return (

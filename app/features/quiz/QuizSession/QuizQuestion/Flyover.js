@@ -5,7 +5,7 @@ import getSrsRankName from 'common/utils/getSrsRankName';
 import Icon from 'common/components/Icon';
 import StreakIcon from 'common/components/StreakIcon';
 import { SRS_RANKS } from 'common/constants';
-import { white, orange, SRS_COLORS } from 'common/styles/colors';
+import { white, orange, SRS_COLORS, cyan } from 'common/styles/colors';
 import { FlyoverWrapper, FlyoverContent } from './styles';
 
 Flyover.propTypes = {
@@ -15,8 +15,19 @@ Flyover.propTypes = {
 };
 
 export const IGNORED = 'IGNORED';
+export const MATCHED_SYNONYM = 'MATCHED_ANSWER'
 
-const getChanges = (isIgnored, from, to) => {
+const getChanges = (isIgnored, matchedSynonym, from, to) => {
+  if (matchedSynonym) {
+    return {
+      toName: MATCHED_SYNONYM,
+      label: "This answer is incorrect, but your answer matches a similar vocabulary!",
+      hasChanged: true,
+      animateUp: true,
+      bgColor: cyan[10],
+      color: white[1],
+    };
+  }
   if (isIgnored) {
     return {
       toName: IGNORED,
@@ -36,20 +47,23 @@ const getChanges = (isIgnored, from, to) => {
   };
 };
 
-const renderIcon = (toName) =>
-  toName === IGNORED ? (
-    <Icon name="ATTENTION" title="Answer Ignored" size="1.25em" />
-  ) : (
-    <StreakIcon streakName={toName} size="1.25em" />
-  );
+const renderIcon = (toName) => {
+  if (toName === IGNORED) {
+    return <Icon name="ATTENTION" title="Answer Ignored" size="1.25em" />;
+  } else if (toName === MATCHED_SYNONYM) {
+    return <Icon name="INFO" title="Matched Synonym" size="1.25em" />;
+  } else {
+    return <StreakIcon streakName={toName} size="1.25em" />;
+  }
+}
 
-function Flyover({ isIgnored, from, to }) {
-  const { toName, ...styleProps } = getChanges(isIgnored, from, to);
+function Flyover({ isIgnored, matchedSynonym, from, to }) {
+  const { toName, label, ...styleProps } = getChanges(isIgnored, matchedSynonym, from, to);
   return (
     <FlyoverWrapper>
-      <FlyoverContent {...styleProps}>
+      <FlyoverContent capitalize={!matchedSynonym} {...styleProps}>
         <span>{renderIcon(toName)}</span>
-        <span>{toName.toLowerCase()}</span>
+        <span>{label ? label : toName.toLowerCase()}</span>
       </FlyoverContent>
     </FlyoverWrapper>
   );

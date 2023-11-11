@@ -82,9 +82,9 @@ export const FlyoverContent = styled(H4)`
   align-items: flex-end;
   border-radius: ${borderRadius};
   opacity: 0;
-  text-transform: capitalize;
 
-  ${({ hasChanged, animateUp, bgColor, color }) => hasChanged && css`
+  ${({ hasChanged, animateUp, bgColor, color, capitalize }) => hasChanged && css`
+      text-transform: ${capitalize ? 'capitalize' : 'none'};
       color: ${color};
       background-color: ${bgColor};
       animation: ${animateUp ? srsRankUp : srsRankDown} 0.7s ease 0s 1 normal both running;
